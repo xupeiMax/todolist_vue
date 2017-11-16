@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>todoList</title>
+    <style>
+        #app{
+            margin: 0 auto;
+            width: 400px;
+        }
+        #add-input{
+            width: 350px;
+            height: 30px;
+        }
+        li{
+            list-style: none
+        }
+        p{
+            display: inline
+        }
+        .finished{
+            text-decoration:line-through;
+        }
+        .item-status{
+            background-color: red;
+            color: #fff;
+            font-size: 12px;
+            padding: 0 5px;
+        }
+        .item-delete{
+            text-decoration:underline;
+            color: gray;
+            font-size: 12px;
+            cursor: pointer;
+        }
+    </style>
+    <script src="https://unpkg.com/vue"></script>
+</head>
+<body>
+    <div id="app">
+        <h1>{{title}}</h1>
+        <input id="add-input" v-model="newItem" @keyup.enter="addNew">
+        <ul>
+            <li v-for="(item,index) in items">
+                <h3 @mouseenter="itemEnter(item)" @mouseleave="itemLeave(item)">
+                <input type="checkbox" @click="toggleFinish(item)">
+                <p class="item-label" :class="{finished:item.isFinished}">{{ index + 1 }}.{{item.label}}</p>
+                <p class="item-status" v-if="item.isFinished">finished</p>
+                <p class="item-delete" v-if="item.showDelete" @click="deleteItem(item)">Delete</p>
+                </h3>
+            </li>
+        </ul>
+    </div>
+    <script>   
+       var STORAGE_KEY = "todos_vuejs"; //放在最前面，因为要拿到赋值"todos_vuejs"
+       new Vue({
+           el: '#app',
+           data:{
+               title:"This is a todoList",
+               items: fetch(),
+               newItem:''
+           },
+           watch:{
+               items:{
+                   handler:function(items){
+                    save(items);
+                   },
+                   deep: true
+               }
+           },
+           methods:{
+               toggleFinish:function (item) {
+                   item.isFinished = !item.isFinished;
+                   item.showDelete = true;
+               },
+               addNew:function(){
+                   this.items.push({
+                       label:this.newItem,
+                       isFinished: false,
+                       showDelete: false
+                   })
+                   this.newItem='';
+               },
+               itemEnter: function (item) {
+                   item.showDelete = true
+               },
+               itemLeave:function(item){
+                   item.showDelete = false
+               },
+               deleteItem:function(item){
+                   var index = this.items.indexOf(item);
+                   this.items.splice(index, 1)
+               }
+           }
+       })  
+       function fetch() {
+          return JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '[]');
+       };
+       function save(items) {
+           window.localStorage.setItem(STORAGE_KEY,JSON.stringify(items));
+       }
+    </script>
+</body>
+</html>
