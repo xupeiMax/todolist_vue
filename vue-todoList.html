@@ -45,7 +45,7 @@
         <ul>
             <li v-for="(item,index) in items">
                 <h3 @mouseenter="itemEnter(item)" @mouseleave="itemLeave(item)">
-                <input type="checkbox" @click="toggleFinish(item)">
+                <input type="checkbox" @click="toggleFinish(item)" v-model="item.isFinished">
                 <p class="item-label" :class="{finished:item.isFinished}">{{ index + 1 }}.{{item.label}}</p>
                 <p class="item-status" v-if="item.isFinished">finished</p>
                 <p class="item-delete" v-if="item.showDelete" @click="deleteItem(item)">Delete</p>
