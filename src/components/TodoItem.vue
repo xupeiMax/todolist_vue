@@ -3,16 +3,13 @@
     <input type="checkbox" @click="toggleFinish(item)" v-model="item.isFinished">
     <p class="item-label" @click="toggleFinish(item)" :class="{finished:item.isFinished}">{{ index + 1 }}.{{item.label}}</p>
     <p class="item-status" v-if="item.isFinished">finished</p>
-    <p class="item-delete" v-if="item.showDelete" @click="deleteItem(item)">Delete</p>
+    <p class="item-delete" v-if="item.showDelete" @click="deleteItem">Delete</p>
   </h3>
 </template>
 
 <script>
 export default {
   name: 'todoItem',
-  data () {
-    return { }
-  },
   props: ['item', 'index'],
   methods: {
     toggleFinish: function (item) {
@@ -25,8 +22,8 @@ export default {
     itemLeave: function (item) {
       item.showDelete = false
     },
-    deleteItem: function (item) {
-      this.$emit('delete', item)
+    deleteItem: function () {
+      this.$emit('delete', this.index)
     }
   }
 }

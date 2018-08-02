@@ -5,7 +5,7 @@
     <input id="add-input" v-model="newItem" @keyup.enter="addNew">
     <ul>
       <li v-for="(item,index) in items" v-bind:key="index">
-       <todo-item v-bind="{item: item,index: index}" v-on:delete="deleteHandler"></todo-item>
+       <todo-item v-bind="{item, index}" v-on:delete="deleteHandler"></todo-item>
       </li>
     </ul>
   </div>
@@ -23,7 +23,7 @@ export default {
       newItem: ''
     }
   },
-  components: { todoItem },
+  components: { 'todo-item': todoItem },
   watch: {
     items: {
       handler: function (items) {
@@ -41,8 +41,7 @@ export default {
       })
       this.newItem = ''
     },
-    deleteHandler: function (item) {
-      var index = this.items.indexOf(item)
+    deleteHandler: function (index) {
       this.items.splice(index, 1)
     }
   }
@@ -62,6 +61,7 @@ export default {
 #add-input {
   width: 350px;
   height: 30px;
+  font-size: 20px;
 }
 li {
   list-style: none;
